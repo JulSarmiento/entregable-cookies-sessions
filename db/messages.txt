@@ -1,0 +1,28 @@
+[
+  {
+    "id": 1,
+    "author": {
+      "name": "Vader",
+      "email": "vader@hotmail.com",
+      "lastname": "Darth",
+      "age": "3",
+      "username": "Vaderrunchis",
+      "picture": "https://randomwordgenerator.com/img/picture-generator/52e9d3414854aa14f1dc8460962e33791c3ad6e04e507441722a72dd964bc7_640.jpg"
+    },
+    "message": "Holis, esto me esta fallando mucho",
+    "timestamp": "22/12/2022, 9:20:58 p. m."
+  },
+  {
+    "id": 2,
+    "author": {
+      "name": "Odashi",
+      "email": "Odashi@gmail.com",
+      "lastname": "Sarmiento",
+      "age": "5",
+      "username": "Dashinejo",
+      "picture": "https://randomwordgenerator.com/img/picture-generator/52e9d3414854aa14f1dc8460962e33791c3ad6e04e507441722a72dd964bc7_640.jpg"
+    },
+    "message": "Hoy no me dieron suficiente pollito",
+    "timestamp": "22/12/2022, 9:33:10 p. m."
+  }
+]
