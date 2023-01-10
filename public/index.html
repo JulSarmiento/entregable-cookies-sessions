@@ -5,12 +5,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./styles.css">
-    <title>Document</title>
+    <title>Home page</title>
   </head>
   <script src="https://cdn.jsdelivr.net/npm/normalizr@3.6.1/dist/normalizr.browser.min.js"></script>
 
   <body>
-      <h1>Bienvenidos a mi Backend</h1>
+      <h1>Bienvenidos</h1>
+
+      <!-- Loggin user -->
+      <div class="loggin-user">
+        <p class="wellcome-message"></p>
+        <button class="logout" id="signout-btn">LogOut</button>
+      </div>
 
       <div>
         <h3>Productos</h3>
@@ -67,13 +73,12 @@
         <div>
           <h4>Chat</h4>
           <ul id="messages-box">
-
+  
           </ul>
         </div>
       </div>
 
-
-
-  </body>
+    </body>
   <script src="./index.js"></script>
+  <script src="./scripts/signout.js"></script>
 </html>

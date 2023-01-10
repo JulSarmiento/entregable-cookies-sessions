@@ -1,14 +1,21 @@
-const tableBody = document.querySelector('.table-body');
-const messageBox = document.querySelector('#messages-box');
+const tableBody = document.querySelector(".table-body");
+const messageBox = document.querySelector("#messages-box");
+const logginBox = document.querySelector(".loggin-user");
+const loginBtn = document.querySelector("#login-btn");
+const wellcomeMessage = document.querySelector(".wellcome-message");
 
-const {schema, normalize, denormalize} = normalizr;
+const { schema, normalize, denormalize } = normalizr;
 
-const authorSchema = new schema.Entity('author', {}, {idAttribute: 'id'});
+const authorSchema = new schema.Entity("author", {}, { idAttribute: "id" });
+
+const printName = (name) => {
+  wellcomeMessage.innerHTML = `Bienvenido ${name}`;
+};
 
 // Print products
 const createProductRow = (product) => {
-  const row = document.createElement('tr');
-  row.classList.add('table-row');
+  const row = document.createElement("tr");
+  row.classList.add("table-row");
   row.innerHTML = `
     <td class="table-cell">${product.productName}</td>
     <td class="table-cell">${product.productPrice}</td>
@@ -17,19 +24,19 @@ const createProductRow = (product) => {
     </td>
   `;
   return row;
-}
+};
 
-const printPRoducts = (products) => {  
+const printPRoducts = (products) => {
   products.forEach((product) => {
-    tableBody.insertAdjacentElement('beforeend', createProductRow(product));
+    tableBody.insertAdjacentElement("beforeend", createProductRow(product));
   });
 };
 
 // Print messages
 const createMessageRow = (data) => {
-  const { author, message, timestamp} = data;
-  const row = document.createElement('li');
-  row.classList.add('message-row');
+  const { author, message, timestamp } = data;
+  const row = document.createElement("li");
+  row.classList.add("message-row");
   row.innerHTML = `
     <p class="message-email">${author.email}</p>
     <p class="message-time">(${timestamp}): </p>
@@ -37,26 +44,30 @@ const createMessageRow = (data) => {
     <img src="${author.picture}" height="50px">
   `;
   return row;
-}
+};
 
 const printMessages = (messages) => {
-  console.log('messages in print', messages)
   messages.forEach((message) => {
-    messageBox.insertAdjacentElement('beforeend', createMessageRow(message));
+    messageBox.insertAdjacentElement("beforeend", createMessageRow(message));
   });
 };
 
-const products = fetch('/api/products-test')
+const products = fetch("/api/products-test")
   .then((response) => response.json())
-  .then(({data}) => {
-    console.log('products in fecth', data)
+  .then(({ data }) => {
     printPRoducts(data);
   });
 
-const messages = fetch('/api/messages')
+const messages = fetch("/api/messages")
   .then((response) => response.json())
-  .then(({data: {result, entities}}) => {
-    console.log('message in fetch', entities)
+  .then(({ data: { result, entities } }) => {
     const denormData = denormalize(result, [authorSchema], entities);
     printMessages(denormData);
+  });
+
+const loggedSession = fetch("/api/session")
+  .then((response) => response.json())
+  .then(({ data }) => {
+    console.log("session in fetch", data);
+    printName(data.username);
   });
