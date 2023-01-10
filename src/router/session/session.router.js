@@ -12,8 +12,8 @@ router.get('/', auth,  (req, res) => {
   req.session.contador++;
   res.status(200).json({
     status: true,
+    username: req.session.user.username,
     message: `${req.session.user.username} ingreso al servidor ${req.session.contador} ${req.session.contador == 1 ? "vez" : "veces"}.`,
-    user: req.session.user.username
   })
 });
 
@@ -40,32 +40,32 @@ router.post('/signin', async (req, res) => {
   if(!username){
     res.status(400).json({
       status: false,
-      message: 'Usuario no enviados'
+      message: `${statusCode[422]}: Usuario incorrecto o no existe.`
     });
   }
 
   const current = await UsersContainer.getByName(username);
   console.log('current', current)
 
-  if(!current) {
-    res.status(401).json({
-      status: false,
-      message: `${statusCode[401]}: Usuario incorrecto`
+  if(current == null ) {
+    req.session.user = {
+      username
+    }
+  
+    await UsersContainer.create(req.session.user);  
+    res.status(200).json({
+      status: true,
+      message: 'Usuario autenticado'
     });
   }
-  console.log('current', current)
 
-  req.session.user = {
-    username: current
-  }
-
-  await UsersContainer.create(req.session.user);
-
-  res.status(200).json({
-    status: true,
-    message: 'Usuario autenticado'
-  });
-
+  if(current ) {
+    res.status(200).json({
+      status: true,
+      message:  `${statusCode[200]}: Usuario atuenticado.`
+    });
+  } 
+    
 });
 
 

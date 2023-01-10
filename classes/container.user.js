@@ -27,24 +27,9 @@ class Users {
       const collection = db.collection(this.collection);
       const result = await collection.insertOne(data);
       await connection.close();
-      return result;
+      return result.insertedId;
     } catch (err) {
       console.log(err);
-    }
-  }
-
-  async getAll() {
-    try {
-      const connection = await this.connect();
-      const db = connection.db(config.dbName);
-      const collection = db.collection(this.collection);
-
-      const result = await collection.find().toArray();
-      await connection.close();
-
-      return result;
-    } catch (err) {
-      console.error("Error getting all", this.collection, err);
     }
   }
 
@@ -53,10 +38,9 @@ class Users {
       const connection = await this.connect();
       const db = connection.db(config.dbName);
       const collection = db.collection(this.collection);
-
-      const result = await collection.find(name);
+      const result = await collection.findOne({username : name});
+      console.log('result', result)
       await connection.close();
-
       return result;
     } catch (err) {
       console.log(err);
