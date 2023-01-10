@@ -1,30 +1,22 @@
 const express = require('express');
 const statusCode = require('http-status');
 const router = express.Router();
+const UsersContainer = require('../../../classes/container.user');
 const auth = require('../../middlewares/auth.middleware');
 
 
-/**
- * @swagger
- * /session:
- * get:
- * description: Get session
- */
 router.get('/', auth,  (req, res) => {
   if(!req.session.contador){
     req.session.contador = 0;
   }
   req.session.contador++;
-  res.status(200).send(`${req.session.user.username} ingreso al servidor ${req.session.contador} ${req.session.contador == 1 ? "vez" : "veces"}.`)
+  res.status(200).json({
+    status: true,
+    message: `${req.session.user.username} ingreso al servidor ${req.session.contador} ${req.session.contador == 1 ? "vez" : "veces"}.`,
+    user: req.session.user.username
+  })
 });
 
-
-/**
- * @swagger
- * /session/destroy:
- * get:
- * description: Destroy session
- */
 router.get('/logout', (req, res) => {
   req.session.destroy( err => {
     if(err){
@@ -40,35 +32,34 @@ router.get('/logout', (req, res) => {
   });
 });
 
-/**
- * @swagger
- * /session/signin:
- * post:
- * description: Sign in
- */
-router.post('/signin', (req, res) => {
-  const USERNAME = 'julie';
-  const PASSWORD = '1234';
-  const { username, password } = req.body;
+router.post('/signin', async (req, res) => {
+  
+  const { username } = req.body;
+  console.log('username', username)
 
-  if(!username || !password){
+  if(!username){
     res.status(400).json({
       status: false,
-      message: 'Usuario o contraseña no enviados'
+      message: 'Usuario no enviados'
     });
   }
 
-  if(username != USERNAME || password != PASSWORD) {
+  const current = await UsersContainer.getByName(username);
+  console.log('current', current)
+
+  if(!current) {
     res.status(401).json({
       status: false,
-      message: `${statusCode[401]}: Usuario o contraseña incorrectos`
+      message: `${statusCode[401]}: Usuario incorrecto`
     });
   }
+  console.log('current', current)
 
   req.session.user = {
-    username,
-    password
+    username: current
   }
+
+  await UsersContainer.create(req.session.user);
 
   res.status(200).json({
     status: true,
